@@ -47,7 +47,7 @@ class VerificationController extends Controller
         $user = User::where('email', $request->email)->first();
 
         // 3. Verificar si el usuario está autenticado
-        if (Auth::user() && Auth::user()->id === $user->id && $user->hasVerifiedEmail()) {
+        if ($user->hasVerifiedEmail()) {
             return response()->json(['message' => 'Ya has iniciado sesión y tu correo electrónico está verificado.'], 400);
         }
 
