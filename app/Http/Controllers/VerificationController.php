@@ -21,7 +21,7 @@ class VerificationController extends Controller
 
         // Verifica si el usuario ya ha verificado su correo electrónico
         if ($user->hasVerifiedEmail()) {
-            return response()->json(['message' => 'El correo electrónico ya ha sido verificado'], 400);
+            return redirect('/correo-verificado');
         }
 
         // Marca al usuario como verificado
@@ -29,7 +29,7 @@ class VerificationController extends Controller
             event(new Verified($user));
         }
 
-        return response()->json(['message' => 'Correo electrónico verificado con éxito']);
+        return redirect('/correo-verificado');
     }
 
     public function resendVerificationEmail(Request $request)
@@ -60,3 +60,19 @@ class VerificationController extends Controller
 
 
 
+//opcion 1, dejar asi el back y en el front actualizar cada 5 segundos para verificar si el usario ya está atenticado (email_verified_at)para que se inicie sesión automaticamente
+/*
+Angular
+if (response.email_verified_at) {
+            // El usuario ha sido verificado, iniciar sesión automáticamente
+            this.http.post('/api/login', { email: response.email, password: 'user_password' }) // Reemplazar 'user_password' con la contraseña del usuario si es necesario
+              .subscribe((loginResponse: any) => {
+                // Guardar el token de acceso en el almacenamiento local o en una cookie
+                localStorage.setItem('token', loginResponse.token);
+                // Redirigir al usuario a la página principal
+                // ...
+              });
+          }
+*/
+
+//opcion 2, modificarlo y cuando se de click en el boton de verificar lo reedija al al front con los datos para iniciar sesion

@@ -15,3 +15,6 @@ Route::middleware([
         return view('dashboard');
     })->name('dashboard');
 });
+Route::get('/correo-verificado', function () {
+    return view('email-verified');
+});
