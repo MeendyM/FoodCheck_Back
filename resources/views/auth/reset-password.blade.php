@@ -6,10 +6,16 @@
 
         <x-validation-errors class="mb-4" />
 
-        <form method="POST" action="{{ route('password.update') }}">
+        <form method="POST" action="{{ route('api.password.reset') }}">
             @csrf
 
-            <input type="hidden" name="token" value="{{ $request->route('token') }}">
+            <input type="hidden" name="token" value="{{ $token }}">
+
+            <div>
+                <label for="email" class="block font-medium text-sm text-gray-700">{{ __('Email') }}</label>
+                <input id="email" class="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm block mt-1 w-full" type="email" name="email" :value="old('email', $request->email)" required autofocus />
+            </div>
+
 
             <div class="block">
                 <x-label for="email" value="{{ __('Email') }}" />

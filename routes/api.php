@@ -1,6 +1,8 @@
 <?php
+
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\VerificationController;
+use App\Http\Controllers\Auth\PasswordResetController;
 
 
 use Illuminate\Http\Request;
@@ -18,8 +20,9 @@ Route::post('/login/google', [AuthController::class, 'loginWithGoogle']);
 Route::post('/login/facebook', [AuthController::class, 'loginWithFacebook']);
 Route::get('/email/verify/{id}/{hash}', [VerificationController::class, 'verify'])
     ->middleware(['signed', 'throttle:6,1']) // Elimina 'auth'
-    ->name('verification.verify');
-
-
-    ;Route::post('/email/resend-verification', [VerificationController::class, 'resendVerificationEmail'])
+    ->name('verification.verify');;
+Route::post('/email/resend-verification', [VerificationController::class, 'resendVerificationEmail'])
     ->middleware('throttle:6,1'); // Limita las solicitudes a 6 por minuto
+
+Route::post('/forgot-password', [PasswordResetController::class, 'sendResetLinkEmail']);
+Route::post('/password/reset', [PasswordResetController::class, 'reset'])->name('api.password.reset');

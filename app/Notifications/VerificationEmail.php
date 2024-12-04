@@ -39,13 +39,13 @@ class VerificationEmail extends Notification
     public function toMail(object $notifiable): MailMessage
     {
         return (new MailMessage)
-                    ->subject('Verifica
+            ->subject('Verifica
  tu dirección de correo electrónico')
- ->view('emails.verify-email', ['verificationUrl' =>$this->verificationUrl($notifiable)]);
+            ->view('emails.verify-email', ['verificationUrl' => $this->verificationUrl($notifiable)]);
 
-                   // ->line('Haz clic en el botón de abajo para verificar tu dirección de correo electrónico.')
-                    //->action('Verificar dirección de correo electrónico', $this->verificationUrl($notifiable))
-                    //->line('Si no creaste una cuenta, no es necesario que realices ninguna otra acción.');
+        // ->line('Haz clic en el botón de abajo para verificar tu dirección de correo electrónico.')
+        //->action('Verificar dirección de correo electrónico', $this->verificationUrl($notifiable))
+        //->line('Si no creaste una cuenta, no es necesario que realices ninguna otra acción.');
     }
 
     /**
@@ -66,8 +66,10 @@ class VerificationEmail extends Notification
     {
         return URL::temporarySignedRoute(
             'verification.verify',
-            Carbon::now()->addMinutes(Config::get('auth.verification.expire',
- 60)),
+            Carbon::now()->addMinutes(Config::get(
+                'auth.verification.expire',
+                60
+            )),
             [
                 'id' => $notifiable->getKey(),
                 'hash' => sha1($notifiable->getEmailForVerification()),

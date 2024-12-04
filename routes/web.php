@@ -1,6 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Http\Request;
+
 
 Route::get('/', function () {
     return view('welcome');
@@ -18,3 +20,6 @@ Route::middleware([
 Route::get('/correo-verificado', function () {
     return view('email-verified');
 });
+Route::get('/password/reset/{token}', function (Request $request, string $token) {
+    return view('auth.reset-password', ['request' => $request, 'token' => $token]);
+})->middleware('guest')->name('password.reset');
