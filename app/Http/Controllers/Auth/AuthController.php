@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Auth;
 
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\Auth\Controller;
 use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
@@ -56,6 +56,7 @@ class AuthController extends Controller
 
         return response()->json(['message' => 'Correo de verificación reenviado']);
     }
+
     public function login(Request $request)
     {
         $credentials = $request->only('email', 'password');
@@ -107,7 +108,7 @@ class AuthController extends Controller
             $sanctumToken = $user->createToken('authToken')->plainTextToken;
 
             // Eliminar el token de inicio de sesión de la base de datos
-          //  DB::table('login_tokens')->where('token', $validated['token'])->delete();
+            DB::table('login_tokens')->where('token', $validated['token'])->delete();
 
             // Retornar el token Sanctum y la información del usuario
             return response()->json([

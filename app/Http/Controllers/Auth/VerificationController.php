@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Auth;
 
 use App\Models\User; // Importa el modelo User
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Auth;
 
 use Illuminate\Support\Facades\Validator;
 
-class VerificationController extends Controller
+class VerificationController
 {
     public function verify(VerifyEmailRequest $request) // Usa la nueva clase aquí
     {

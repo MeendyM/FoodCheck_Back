@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\Auth\Controller;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Notifications\ResetPasswordNotification;
@@ -71,6 +71,6 @@ class PasswordResetController extends Controller
             ->where('email', $request->email)
             ->delete();
 
-        return response()->json(['message' => 'Tu contraseña ha sido restablecida.'], 200);
+        return response()->json(['message' => 'Tu contraseña ha sido restablecida.'], 200); //aqui cambiarlo por una vista blade que indique que ya se ha actualizado la contraseña
     }
 }
