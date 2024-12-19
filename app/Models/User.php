@@ -29,7 +29,11 @@ class User extends Authenticatable implements MustVerifyEmail
      * @var array<int, string>
      */
     protected $fillable = [
-        'name', 'email', 'password', 'socialite', 'profile_photo_path',
+        'name',
+        'email',
+        'password',
+        'socialite',
+        'profile_photo_path',
 
     ];
 
@@ -66,9 +70,30 @@ class User extends Authenticatable implements MustVerifyEmail
             'password' => 'hashed',
         ];
     }
-//en caso de quereer usar la notificación por defecto quitar este bloque de codigo (la que es por defecto es la de vendor)
+    //en caso de quereer usar la notificación por defecto quitar este bloque de codigo (la que es por defecto es la de vendor)
     public function sendEmailVerificationNotification()
-{
-    $this->notify(new VerificationEmail);
-}
+    {
+        $this->notify(new VerificationEmail);
+    }
+
+    public function followers()
+    {
+        return $this->hasMany(Follower::class, 'follower_id');
+    }
+
+    /**
+     * Relación con los seguidos (usuarios a los que este usuario sigue).
+     */
+    public function following()
+    {
+        return $this->hasMany(Follower::class, 'user_id');
+    }
+
+    /**
+     * Relación con las notificaciones.
+     */
+    public function notifications()
+    {
+        return $this->hasMany(Notification::class);
+    }
 }
