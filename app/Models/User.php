@@ -76,18 +76,18 @@ class User extends Authenticatable implements MustVerifyEmail
         $this->notify(new VerificationEmail);
     }
 
+
+
     public function followers()
     {
-        return $this->hasMany(Follower::class, 'follower_id');
+        return $this->belongsToMany(User::class, 'followers', 'follower_id', 'user_id');
     }
 
-    /**
-     * Relación con los seguidos (usuarios a los que este usuario sigue).
-     */
     public function following()
     {
-        return $this->hasMany(Follower::class, 'user_id');
+        return $this->belongsToMany(User::class, 'followers', 'user_id', 'follower_id');
     }
+
 
     /**
      * Relación con las notificaciones.

@@ -6,6 +6,7 @@ use App\Http\Controllers\Auth\PasswordResetController;
 use App\Http\Controllers\Auth\SocialAuthController;
 use App\Http\Controllers\FollowerController;
 use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -27,4 +28,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/notifications', [NotificationController::class, 'index']);
     Route::post('/notifications/markAllAsRead', [NotificationController::class, 'markAllAsRead']);
     Route::post('/notifications/{notification}/read', [NotificationController::class, 'markAsRead']);
+    Route::get('/users/me', [UserController::class, 'getLoggedInUserInfo']);
+    Route::get('/users/{userId}', [UserController::class, 'getUserInfo']);
 });
