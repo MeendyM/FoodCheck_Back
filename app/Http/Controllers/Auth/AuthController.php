@@ -77,53 +77,62 @@ class AuthController extends Controller
     }
 
     public function loginWithToken(Request $request)
-    {
-        // Validar el input
-        $validated = $request->validate([
-            'token' => 'required|string',
-        ]);
+{
+    // Validar el input
+    $validated = $request->validate([
+        'token' => 'required|string',
+    ]);
 
-        try {
-            // Buscar el token en la base de datos
-            $loginToken = DB::table('login_tokens')->where('token', $validated['token'])->first();
+    try {
+        // Buscar el token en la base de datos
+        $loginToken = DB::table('login_tokens')->where('token', $validated['token'])->first();
 
-            if (!$loginToken) {
-                return response()->json([
-                    'error' => 'Token inválido o expirado.',
-                    'hint' => 'Verifica que el token sea correcto o solicita uno nuevo.',
-                ], 401);
-            }
-
-            // Obtener el usuario relacionado al token
-            $user = User::find($loginToken->user_id);
-
-            if (!$user) {
-                return response()->json([
-                    'error' => 'Usuario no encontrado.',
-                    'hint' => 'Es posible que el usuario relacionado al token ya no exista.',
-                ], 404);
-            }
-
-            // Generar un token Sanctum
-            $sanctumToken = $user->createToken('authToken')->plainTextToken;
-
-            // Eliminar el token de inicio de sesión de la base de datos
-            DB::table('login_tokens')->where('token', $validated['token'])->delete();
-
-            // Retornar el token Sanctum y la información del usuario
+        if (!$loginToken) {
             return response()->json([
-                'message' => 'Inicio de sesión exitoso.',
-                'token' => $sanctumToken,
-                'user' => $user,
-            ], 200);
-
-        } catch (\Exception $e) {
-            // Manejo general de errores
-            return response()->json([
-                'error' => 'Ocurrió un error inesperado.',
-                'details' => $e->getMessage(),
-            ], 500);
+                'error' => 'Token inválido o expirado.',
+                'hint' => 'Verifica que el token sea correcto o solicita uno nuevo.',
+            ], 401);
         }
+
+        // Obtener el usuario relacionado al token
+        $user = User::find($loginToken->user_id);
+
+        if (!$user) {
+            return response()->json([
+                'error' => 'Usuario no encontrado.',
+                'hint' => 'Es posible que el usuario relacionado al token ya no exista.',
+            ], 404);
+        }
+
+        // Verificar si el correo ha sido confirmado
+        if (is_null($user->email_verified_at)) {
+            return response()->json([
+                'error' => 'El correo electrónico no ha sido verificado.',
+                'hint' => 'Por favor, verifica tu correo electrónico antes de iniciar sesión.',
+            ], 403);
+        }
+
+        // Generar un token Sanctum
+        $sanctumToken = $user->createToken('authToken')->plainTextToken;
+
+        // Eliminar el token de inicio de sesión de la base de datos
+        DB::table('login_tokens')->where('token', $validated['token'])->delete();
+
+        // Retornar el token Sanctum y la información del usuario
+        return response()->json([
+            'message' => 'Inicio de sesión exitoso.',
+            'token' => $sanctumToken,
+            'user' => $user,
+        ], 200);
+
+    } catch (\Exception $e) {
+        // Manejo general de errores
+        return response()->json([
+            'error' => 'Ocurrió un error inesperado.',
+            'details' => $e->getMessage(),
+        ], 500);
     }
+}
+
 
 }
